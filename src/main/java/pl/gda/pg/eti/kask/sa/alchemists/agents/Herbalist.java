@@ -22,9 +22,12 @@ public class Herbalist extends BaseAgent {
     @Override
     protected void setup() {
         super.setup();
-        herbs.add(new Herb("Peacebloom"));
-        herbs.add(new Herb("Swiftthistle"));
-        herbs.add(new Herb("Sungrass"));
+
+        Object[] args = getArguments();
+        System.out.print(args);
+        for (Object arg : args) {
+            herbs.add(new Herb(arg.toString()));
+        } 
         addBehaviour(new RegisterServiceBehaviour(this, "herbalist"));
         addBehaviour(new HerbalistBehaviour(this));
     }

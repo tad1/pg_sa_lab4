@@ -9,7 +9,7 @@
             "name": "Current File",
             "request": "launch",
             "mainClass": "jade.Boot",
-            "args": "-gui -agents alchemist:pl.gda.pg.eti.kask.sa.alchemists.agents.Alchemist;herbalist:pl.gda.pg.eti.kask.sa.alchemists.agents.Herbalist;mage:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage"
+            "args": "-gui -agents herbalist:pl.gda.pg.eti.kask.sa.alchemists.agents.Herbalist('Grass','Wee','Dum-Dabu','Mytical Dandelion');alchemist:pl.gda.pg.eti.kask.sa.alchemists.agents.Alchemist('Potion of mana','Potion of strenght','Weak potion');mage:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage"
         }
     ]
 }

@@ -22,8 +22,10 @@ public class Alchemist extends BaseAgent {
     @Override
     protected void setup() {
         super.setup();
-        potions.add(new Potion("Shrouding Potion"));
-        potions.add(new Potion("Heroic Potion"));
+        Object[] args = getArguments();
+        for (Object arg : args) {
+            potions.add(new Potion(arg.toString()));
+        } 
         addBehaviour(new RegisterServiceBehaviour(this, "alchemist"));
         addBehaviour(new AlchemistBehaviour(this));
     }

@@ -26,15 +26,27 @@ public class Mage extends BaseAgent {
         super.setup();
         SequentialBehaviour behaviour = new SequentialBehaviour(this);
 
+        Object[] args = getArguments();
+        String potions_s = args[0].toString();
+        String herbs_s = args[1].toString();
+
+        String[] potions = potions_s.split(";");
+        String[] herbs = herbs_s.split(";");
+
         behaviour.addSubBehaviour(new FindServiceBehaviour(this, "alchemist") {
 
             @Override
             protected void onResult(DFAgentDescription[] services) {
                 if (services != null && services.length > 0) {
                     AID alchemist = services[0].getName();
-                    SellPotion action = new SellPotion(new Potion("Heroic Potion"));
-                    RequestPotionBehaviour request = new RequestPotionBehaviour(Mage.this, alchemist, action);
-                    ((SequentialBehaviour) getParent()).addSubBehaviour(request);
+
+                    SequentialBehaviour parent = (SequentialBehaviour) getParent();
+                    for (String potion : potions) {
+                        SellPotion action = new SellPotion(new Potion(potion));
+                        RequestPotionBehaviour request = new RequestPotionBehaviour(Mage.this, alchemist, action);
+                        
+                        parent.addSubBehaviour(request);
+                    }
 
                 }
             }
