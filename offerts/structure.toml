@@ -1,0 +1,9 @@
+agents = ["Alchemist", "Elementarist", "Herbalist", "Mage"]
+
+[items]
+potion = ["a", "b"]
+herb = ["a", "b"]
+essence = ["a", "b"]
+
+[compounds]
+# define who can what sell

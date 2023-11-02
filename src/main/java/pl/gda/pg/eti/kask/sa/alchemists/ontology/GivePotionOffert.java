@@ -8,19 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author psysiu
- */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SellHerb implements AgentAction {
-    
-    private Herb herb;
-    private int number;
-    
+public class GivePotionOffert implements AgentAction{
+    // offerts should have ID, but we will assume that all offerts are the same
+    private Potion item;
 }

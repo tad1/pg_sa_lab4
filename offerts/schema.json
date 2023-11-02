@@ -1,0 +1,94 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "title": "Example Props",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "type":{
+                "enum": ["Alchemist", "Elementarist", "Herbalist", "Mage"]   
+            },
+            "name":{
+                "type":"string"
+            },
+            "potions":{
+                "type":"array",
+                "items": {
+                    "type":"string",
+                    "enum": ["Monday Potion", "Blast Potion of Energy", "Vitality Potion", "Potion of Instant Hangover", "Potion of Strenght", "Potion of mana"]
+                }
+            },
+            "herbs":{
+                "type":"array",
+                "items": {
+                    "type":"string",
+                    "enum": ["Mytical Dandelion", "Grass", "Oregano", "Marshmallow", "Hyssop"]
+                }
+            },
+            "essences":{
+                "type":"array",
+                "items": {
+                    "type":"string",
+                    "enum": ["Water Essence", "Light Essence", "Dark Essence", "Fire Essence", "Air Essence", "Earth Essence", "Sulfur Essence", "Mercury Essence", "Salt Essence"]
+                }
+            },
+            "prices":{
+                "type":"array",
+                "items": {
+                    "type":"integer"
+                }
+            },
+            "number":{
+                "type":"array",
+                "items": {
+                    "type":"integer"
+                }
+            },
+            "money":{
+                "type":"integer"
+            }
+        },
+        "allOf": [
+            {
+                "required":["type"],
+                "if": {
+                    "properties": {"type":{"const": "Alchemist"}}
+                },
+                "then": {
+                    "required": ["potions", "prices", "number"],
+                    "not": { "required": ["essences", "money"]}
+                }
+            },
+            {
+                "required":["type"],
+                "if": {
+                    "properties": {"type":{"const": "Herbalist"}}
+                },
+                "then": {
+                    "required": ["herbs", "prices", "number"],
+                    "not": { "required": ["potions", "essences", "money"]}
+                }
+            },
+            {
+                "required":["type"],
+                "if": {
+                    "properties": {"type":{"const": "Elementarist"}}
+                },
+                "then": {
+                    "required": ["essences", "prices", "number"],
+                    "not": { "required": ["potions", "herbs", "money"]}
+                }
+            },
+            {
+                "required":["type"],
+                "if": {
+                    "properties": {"type":{"enum": ["Elementarist"]}}
+                },
+                "then": {
+                    "required": ["money"],
+                    "not": { "required": ["prices", "number"]}
+                }
+            }
+        ]
+    }
+}

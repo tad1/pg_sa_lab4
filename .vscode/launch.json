@@ -6,10 +6,12 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
+            "name": "Example",
             "request": "launch",
             "mainClass": "jade.Boot",
-            "args": "-gui -agents herbalist:pl.gda.pg.eti.kask.sa.alchemists.agents.Herbalist('Grass','Wee','Dum-Dabu','Mytical Dandelion');alchemist:pl.gda.pg.eti.kask.sa.alchemists.agents.Alchemist('Potion of mana','Potion of strenght','Weak potion');mage:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage"
+            "args": "-gui -agents ${AGENT_ARGS}",
+            "envFile": "${workspaceFolder}/.env",
+            "preLaunchTask": "extract env"
         }
     ]
 }

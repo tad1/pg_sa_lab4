@@ -21,10 +21,18 @@ public class AlchemyOntology extends BeanOntology {
     private AlchemyOntology(String name) {
         super(name);
         try {
+            add(Offert.class);
+            
             add(Herb.class);
             add(Potion.class);
+            add(Essence.class);
             add(SellHerb.class);
             add(SellPotion.class);
+            add(SellEssence.class);
+            add(GiveHerbOffert.class);
+            add(GivePotionOffert.class);
+            add(GiveEssenceOffert.class);
+
         } catch (BeanOntologyException ex) {
             log.log(Level.SEVERE, null, ex);
         }

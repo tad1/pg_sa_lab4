@@ -19,7 +19,8 @@ public class SellPotionBehaviour extends ActionBehaviour<SellPotion, Alchemist> 
 
     @Override
     protected Predicate performAction() {
-        if (myAgent.getPotions().contains(action.getPotion())) {
+        if (myAgent.haveEnought(action.getPotion(), action.getNumber())) {
+            myAgent.sell(action.getPotion(), action.getNumber());
             return new Result(action, action.getPotion());
         } else {
             return null;    

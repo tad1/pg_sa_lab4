@@ -11,7 +11,7 @@ import pl.gda.pg.eti.kask.sa.alchemists.ontology.Potion;
  *
  * @author psysiu
  */
-public class Alchemist extends BaseAgent {
+public class Alchemist extends SingleConceptMerchant<Potion> {
 
     @Getter
     private final List<Potion> potions = new ArrayList<>();
@@ -28,6 +28,11 @@ public class Alchemist extends BaseAgent {
         } 
         addBehaviour(new RegisterServiceBehaviour(this, "alchemist"));
         addBehaviour(new AlchemistBehaviour(this));
+    }
+
+    @Override
+    protected Potion retriveConcept(Object arg) {
+        return new Potion(arg.toString());
     }
 
 }

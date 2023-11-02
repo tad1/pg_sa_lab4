@@ -8,19 +8,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author psysiu
- */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SellHerb implements AgentAction {
-    
-    private Herb herb;
+public class SellEssence implements AgentAction{
+    private Essence essence;
     private int number;
-    
 }

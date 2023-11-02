@@ -11,7 +11,7 @@ import pl.gda.pg.eti.kask.sa.alchemists.ontology.Herb;
  *
  * @author psysiu
  */
-public class Herbalist extends BaseAgent {
+public class Herbalist extends SingleConceptMerchant<Herb> {
 
     @Getter
     private final List<Herb> herbs = new ArrayList<>();
@@ -30,6 +30,11 @@ public class Herbalist extends BaseAgent {
         } 
         addBehaviour(new RegisterServiceBehaviour(this, "herbalist"));
         addBehaviour(new HerbalistBehaviour(this));
+    }
+
+    @Override
+    protected Herb retriveConcept(Object arg) {
+        return new Herb(arg.toString());
     }
 
 }

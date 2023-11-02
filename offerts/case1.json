@@ -1,0 +1,16 @@
+[
+    {
+        "type": "Alchemist",
+        "name": "Adam",
+        "potions": ["Potion of mana", "Monday Potion", "Blast Potion of Energy"],
+        "number": [2, 1, 2],
+        "prices": [2,3,4]
+    },
+    {
+        "type": "Herbalist",
+        "name": "Agel",
+        "herbs": ["Grass", "Marshmallow", "Mytical Dandelion"],
+        "number": [2, 1, 2],
+        "prices": [2,3,4]
+    }
+]

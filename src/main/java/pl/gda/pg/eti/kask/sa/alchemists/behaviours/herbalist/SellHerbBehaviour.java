@@ -19,7 +19,8 @@ public class SellHerbBehaviour extends ActionBehaviour<SellHerb, Herbalist> {
 
     @Override
     protected Predicate performAction() {
-        if (myAgent.getHerbs().contains(action.getHerb())) {
+        if (myAgent.haveEnought(action.getHerb(), action.getNumber())) {
+            myAgent.sell(action.getHerb(), action.getNumber());
             return new Result(action, action.getHerb());
         } else {
             return null;    

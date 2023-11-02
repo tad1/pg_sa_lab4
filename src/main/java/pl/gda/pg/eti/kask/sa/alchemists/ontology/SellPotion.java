@@ -21,5 +21,6 @@ import lombok.ToString;
 public class SellPotion implements AgentAction {
     
     private Potion potion;
+    private int number;
     
 }
