@@ -12,5 +12,13 @@
         "herbs": ["Grass", "Marshmallow", "Mytical Dandelion"],
         "number": [2, 1, 2],
         "prices": [2,3,4]
+    },
+    {
+        "type": "Mage",
+        "name": "Mana",
+        "herbs": ["Grass"],
+        "potions": ["Monday Potion", "Blast Potion of Energy"],
+        "essences": [],
+        "money": 10
     }
 ]
