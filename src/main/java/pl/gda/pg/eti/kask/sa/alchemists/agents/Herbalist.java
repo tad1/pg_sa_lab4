@@ -13,8 +13,6 @@ import pl.gda.pg.eti.kask.sa.alchemists.ontology.Herb;
  */
 public class Herbalist extends SingleConceptMerchant<Herb> {
 
-    @Getter
-    private final List<Herb> herbs = new ArrayList<>();
     
     public Herbalist() {
     }
@@ -23,11 +21,6 @@ public class Herbalist extends SingleConceptMerchant<Herb> {
     protected void setup() {
         super.setup();
 
-        Object[] args = getArguments();
-        System.out.print(args);
-        for (Object arg : args) {
-            herbs.add(new Herb(arg.toString()));
-        } 
         addBehaviour(new RegisterServiceBehaviour(this, "herbalist"));
         addBehaviour(new HerbalistBehaviour(this));
     }

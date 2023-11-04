@@ -17,7 +17,7 @@
         "type": "Mage",
         "name": "Mana",
         "herbs": ["Grass"],
-        "potions": ["Monday Potion", "Blast Potion of Energy"],
+        "potions": ["Monday Potion", "Blast Potion of Energy", "Blast Potion of Energy"],
         "essences": [],
         "money": 10
     }

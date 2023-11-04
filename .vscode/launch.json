@@ -9,7 +9,7 @@
             "name": "Example",
             "request": "launch",
             "mainClass": "jade.Boot",
-            "args": "-gui -agents ${AGENT_ARGS}",
+            "args": "-gui -agents ${MERCHANT_ARGS}${MAGE_ARG}",
             "envFile": "${workspaceFolder}/.env",
             "preLaunchTask": "extract env"
         }

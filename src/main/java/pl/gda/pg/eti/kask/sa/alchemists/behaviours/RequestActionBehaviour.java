@@ -6,7 +6,9 @@ import jade.content.lang.sl.SLCodec;
 import jade.content.onto.OntologyException;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
+import jade.core.behaviours.CompositeBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
 import java.util.UUID;
@@ -27,11 +29,20 @@ public abstract class RequestActionBehaviour<T extends AgentAction, E extends Ba
     private final AID participant;
 
     private final T action;
+    private final ParallelBehaviour recieveBehaviour;
+
+    public RequestActionBehaviour(E agent, AID participant, T action, ParallelBehaviour recieveBehaviour) {
+        this.participant = participant;
+        this.action = action;
+        this.myAgent = agent;
+        this.recieveBehaviour = recieveBehaviour;
+    }
 
     public RequestActionBehaviour(E agent, AID participant, T action) {
         this.participant = participant;
         this.action = action;
         this.myAgent = agent;
+        this.recieveBehaviour = null;
     }
     
     @Override
@@ -50,12 +61,17 @@ public abstract class RequestActionBehaviour<T extends AgentAction, E extends Ba
             myAgent.getContentManager().fillContent(request, action);
             myAgent.getActiveConversationIds().add(conversationId);
             myAgent.send(request);
-            ReceiveResultBehaviour resultBehaviour = createResultBehaviour(conversationId);
-            if (getParent() != null && getParent() instanceof SequentialBehaviour) {
+            ReceiveResultBehaviour<E> resultBehaviour = createResultBehaviour(conversationId);
+            if(recieveBehaviour != null){
+                recieveBehaviour.addSubBehaviour(resultBehaviour);
+            } else if (getParent() != null && getParent() instanceof SequentialBehaviour) {
                 ((SequentialBehaviour)getParent()).addSubBehaviour(resultBehaviour);
+            } else if (getParent() != null && getParent() instanceof ParallelBehaviour){
+                ((ParallelBehaviour)getParent()).addSubBehaviour(resultBehaviour);
             } else {
                 myAgent.addBehaviour(resultBehaviour);
             }
+
         } catch (Codec.CodecException | OntologyException ex) {
             log.log(Level.WARNING, ex.getMessage(), ex);
         }

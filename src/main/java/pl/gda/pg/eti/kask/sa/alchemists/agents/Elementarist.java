@@ -3,6 +3,8 @@ package pl.gda.pg.eti.kask.sa.alchemists.agents;
 import java.util.List;
 
 import lombok.Getter;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RegisterServiceBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.elementarist.ElementaristBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.Essence;
 
 public class Elementarist extends SingleConceptMerchant<Essence>{
@@ -18,7 +20,8 @@ public class Elementarist extends SingleConceptMerchant<Essence>{
     protected void setup() {
         super.setup();
 
-        // fetch argument -- the file, select the agent we want
+        addBehaviour(new RegisterServiceBehaviour(this, "elementarist"));
+        addBehaviour(new ElementaristBehaviour(this));
         
 
     }

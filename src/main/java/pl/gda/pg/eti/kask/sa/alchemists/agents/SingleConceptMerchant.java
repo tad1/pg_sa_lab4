@@ -1,13 +1,24 @@
 package pl.gda.pg.eti.kask.sa.alchemists.agents;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 import javax.swing.SwingUtilities;
 
+import jade.content.AgentAction;
 import jade.content.Concept;
+import jade.content.Predicate;
+import jade.content.onto.basic.Result;
+import jade.core.AID;
+import jade.core.behaviours.Behaviour;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.gui.GuiAgent;
 import lombok.Getter;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.FindServiceBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.ReceiveResultBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RequestActionBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.gui.SingleConceptMerchantGUI;
+import pl.gda.pg.eti.kask.sa.alchemists.ontology.Offert;
 
 
 // merchant can sell alchemy item
@@ -43,7 +54,7 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
             itemPrice.put(item, price);
         }
 
-        myGui = new SingleConceptMerchantGUI<T>(this);
+      myGui = new SingleConceptMerchantGUI<T>(this);
 		myGui.showCorrect();
 
     }
@@ -62,7 +73,6 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
             itemNumber.put(item, new_val);
         }
     }
-
 
     protected void takeDown() {
         this.disposeGUI();

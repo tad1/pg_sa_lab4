@@ -24,7 +24,7 @@ public class HerbalistBehaviour extends WaitingBehaviour<Herbalist>{
         if (action.getAction() instanceof SellHerb) {
             myAgent.addBehaviour(new SellHerbBehaviour(myAgent, (SellHerb) action.getAction(), conversationId, participant));
         }  else if (action.getAction() instanceof GiveHerbOffert){
-            myAgent.addBehaviour(new SendOfferBechaviour<Herb>(myAgent, ((GiveHerbOffert) action.getAction()).getItem(), conversationId, participant));
+            myAgent.addBehaviour(new SendOfferBechaviour<Herb, GiveHerbOffert>(myAgent, (GiveHerbOffert)action.getAction(), ((GiveHerbOffert) action.getAction()).getItem(), conversationId, participant));
         }
     }
     

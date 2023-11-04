@@ -3,6 +3,7 @@ package pl.gda.pg.eti.kask.sa.alchemists.behaviours;
 import jade.content.ContentElement;
 import jade.content.Predicate;
 import jade.content.lang.Codec;
+import jade.content.lang.sl.ParseException;
 import jade.content.onto.OntologyException;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;

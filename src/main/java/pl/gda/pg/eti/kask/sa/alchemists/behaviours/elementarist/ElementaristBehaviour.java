@@ -25,8 +25,8 @@ public class ElementaristBehaviour extends WaitingBehaviour<Elementarist>{
     protected void action(Action action, String conversationId, AID participant) {
         if (action.getAction() instanceof SellEssence) {
             myAgent.addBehaviour(new SellElementBehaviour(myAgent, (SellEssence) action.getAction(), conversationId, participant));
-        } else if (action.getAction() instanceof GivePotionOffert){
-            myAgent.addBehaviour(new SendOfferBechaviour<Essence>(myAgent, ((GiveEssenceOffert) action.getAction()).getItem(), conversationId, participant));
+        } else if (action.getAction() instanceof GiveEssenceOffert){
+            myAgent.addBehaviour(new SendOfferBechaviour<Essence, GiveEssenceOffert>(myAgent, (GiveEssenceOffert)action.getAction(),((GiveEssenceOffert) action.getAction()).getItem(), conversationId, participant));
         }
     }
     

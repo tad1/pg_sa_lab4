@@ -26,7 +26,7 @@ do
             MERCHANTS="${MERCHANTS},"    
         fi
 
-        MERCHANTS="${MERCHANTS}'$ITEM_NAME',$ITEM_PRICE,$ITEM_NUMBER"
+        MERCHANTS="${MERCHANTS}$ITEM_NAME,$ITEM_PRICE,$ITEM_NUMBER"
 
     done
     MERCHANTS="${MERCHANTS});"
@@ -37,12 +37,12 @@ done
 MAGE=$(jq 'first(.[] | select(.type=="Mage"))' $1)
 
 NAME=$(echo $MAGE | jq -r '.name')
-POTIONS=$(echo $MAGE | jq -r '.potions | @csv')
-HERBS=$(echo $MAGE | jq -r '.herbs | @csv')
-ESSENCES=$(echo $MAGE | jq -r '.essences | @csv')
-ESSENCES=$(echo $MAGE | jq -r '.money')
+POTIONS=$(echo $MAGE | jq -r '.potions | join("|")')
+HERBS=$(echo $MAGE | jq -r '.herbs | join("|")')
+ESSENCES=$(echo $MAGE | jq -r '.essences | join("|")')
+MONEY=$(echo $MAGE | jq -r '.money')
 
-MAGE_ARG="${NAME}:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage($MONEY,'$POTIONS','$HERBS','$ESSENCES');"
+MAGE_ARG="${NAME}:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage($MONEY,$POTIONS,$HERBS,$ESSENCES);"
 # --- END MAGE
 
 echo "MERCHANT_ARGS=$MERCHANTS" > .env

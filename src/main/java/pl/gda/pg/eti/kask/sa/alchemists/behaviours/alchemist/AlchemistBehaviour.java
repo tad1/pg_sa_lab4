@@ -24,7 +24,7 @@ public class AlchemistBehaviour extends WaitingBehaviour<Alchemist>{
         if (action.getAction() instanceof SellPotion) {
             myAgent.addBehaviour(new SellPotionBehaviour(myAgent, (SellPotion) action.getAction(), conversationId, participant));
         } else if (action.getAction() instanceof GivePotionOffert){
-            myAgent.addBehaviour(new SendOfferBechaviour<Potion>(myAgent, ((GivePotionOffert) action.getAction()).getItem(), conversationId, participant));
+            myAgent.addBehaviour(new SendOfferBechaviour<Potion, GivePotionOffert>(myAgent, (GivePotionOffert)action.getAction(), ((GivePotionOffert) action.getAction()).getItem(), conversationId, participant));
         }
     }
     

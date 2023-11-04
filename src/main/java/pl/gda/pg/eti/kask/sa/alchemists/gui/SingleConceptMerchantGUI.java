@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -41,7 +42,14 @@ public class SingleConceptMerchantGUI<T extends Concept> extends JFrame{
         // Create a JTable with the table model
         JTable table = new JTable(model);
 
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(3 * 100); // "Name" column
+        columnModel.getColumn(1).setPreferredWidth(10); // "Price" column
+        columnModel.getColumn(2).setPreferredWidth(10); // "Quantity" column
+
+
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(getSize());
         panel.add(scrollPane);
         add(panel);
     }
