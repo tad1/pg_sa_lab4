@@ -31,6 +31,7 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
     @Getter
     protected HashMap<T, Integer> itemNumber;
 
+   protected long delay;
 
     public SingleConceptMerchant(){
     }
@@ -43,16 +44,16 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
         itemNumber = new HashMap<>();
         // add from parameters
         // name, value, total
-        assert getArguments().length % 3 == 0;
+        assert getArguments().length % 3 == 1;
 
-        for (int i = 0; i < getArguments().length; i+=3) {
+        for (int i = 0; i < getArguments().length - 1; i+=3) {
             T item = retriveConcept(getArguments()[i]);
             int price = Integer.parseInt(getArguments()[i+1].toString());
             int number = Integer.parseInt(getArguments()[i+2].toString());
-
             itemNumber.put(item, number);
             itemPrice.put(item, price);
-        }
+         }
+         delay = Long.parseLong(getArguments()[getArguments().length-1].toString());
 
       myGui = new SingleConceptMerchantGUI<T>(this);
 		myGui.showCorrect();
@@ -63,14 +64,19 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
 
 
     public boolean haveEnought(T item, int requested){
-        return itemNumber.get(item) >= requested;
+        return itemNumber.get(item) != null && itemNumber.get(item) >= requested;
     }
 
     // this should not be the sell, but removeFromStock, however that method should not be public
     public void sell(T item, int requested){
         if(haveEnought(item, requested)){
             int new_val = itemNumber.get(item) - requested;
-            itemNumber.put(item, new_val);
+            if(new_val <= 0){
+               itemNumber.remove(item);
+            }  else{
+               itemNumber.put(item, new_val);
+            }
+            reloadGUI();
         }
     }
 
@@ -112,6 +118,11 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
   
      public void afterReload() {
         this.restoreGUI();
+     }
+
+     public void reloadGUI(){
+         disposeGUI();
+         restoreGUI();
      }
 
     private void restoreGUI() {

@@ -2,6 +2,8 @@ package pl.gda.pg.eti.kask.sa.alchemists.agents;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jade.core.behaviours.WakerBehaviour;
 import lombok.Getter;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RegisterServiceBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.herbalist.HerbalistBehaviour;
@@ -21,8 +23,14 @@ public class Herbalist extends SingleConceptMerchant<Herb> {
     protected void setup() {
         super.setup();
 
-        addBehaviour(new RegisterServiceBehaviour(this, "herbalist"));
-        addBehaviour(new HerbalistBehaviour(this));
+        addBehaviour(new WakerBehaviour(this, this.delay) {
+            @Override
+            protected void onWake() {
+                super.onWake();
+                addBehaviour(new HerbalistBehaviour(Herbalist.this));
+                addBehaviour(new RegisterServiceBehaviour(Herbalist.this, "herbalist"));
+            }
+        });
     }
 
     @Override

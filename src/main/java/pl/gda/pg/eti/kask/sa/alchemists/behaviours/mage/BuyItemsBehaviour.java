@@ -53,6 +53,9 @@ public class BuyItemsBehaviour extends OneShotBehaviour {
 
     private <T extends Concept, R extends AgentAction> void buyAllRequired(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts, Function2<T,Integer,R> itemCountToAction, ParallelBehaviour parent){
         for (T item : required.keySet()) {
+            if(offerts.get(item) == null){
+                return;
+            }
 
             for (OffertProposition offert : offerts.get(item)) {
                 int count = Math.min(required.get(item), offert.getOffert().getQuantity());

@@ -18,6 +18,7 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.core.behaviours.SequentialBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.core.behaviours.WakerBehaviour;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import lombok.Getter;
@@ -67,6 +68,8 @@ public class Mage extends BaseAgent {
     @Getter
     private HashMap<Essence, ArrayList<OffertProposition>> essenceOfferts;
 
+    private long delay;
+
     @Override
     protected void setup() {
         super.setup();
@@ -76,6 +79,7 @@ public class Mage extends BaseAgent {
         String potions_s = args[1].toString();
         String herbs_s = args[2].toString();
         String essences_s = args[3].toString();
+        delay = Long.parseLong(args[args.length-1].toString());
         
         
         this.money = Integer.parseInt(args[0].toString());
@@ -97,26 +101,31 @@ public class Mage extends BaseAgent {
         
         myGui = new MageGUI(this);
         myGui.showCorrect();
-        
-        ParallelBehaviour get_all_behaviour = new ParallelBehaviour(this, ParallelBehaviour.WHEN_ALL);
-        ParallelBehaviour request_all = new ParallelBehaviour(this, ParallelBehaviour.WHEN_ALL);
-        ParallelBehaviour recieve_all = new ParallelBehaviour(this, ParallelBehaviour.WHEN_ALL);
-        get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("alchemist", requiredPotions, potionOfferts, i -> new GivePotionOffert(i)));
-        get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("herbalist", requiredHerbs, herbOfferts, i -> new GiveHerbOffert(i)));
-        get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("elementarist", requiredEssences, essenceOfferts, i -> new GiveEssenceOffert(i)));
 
-        SequentialBehaviour behaviour = new SequentialBehaviour(this);
-        behaviour.addSubBehaviour(get_all_behaviour);
-        behaviour.addSubBehaviour(request_all);
-        behaviour.addSubBehaviour(recieve_all);
-        behaviour.addSubBehaviour(new CheckOffertsBehaviour(this));
+        TickerBehaviour fetchBehaviour = new TickerBehaviour(this, 1000) {
+
+            @Override
+            protected void onTick() {
+                ParallelBehaviour get_all_behaviour = new ParallelBehaviour(myAgent, ParallelBehaviour.WHEN_ALL);
+                potionOfferts.clear();
+                herbOfferts.clear();
+                essenceOfferts.clear();
+
+                get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("alchemist", requiredPotions, potionOfferts, i -> new GivePotionOffert(i)));
+                get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("herbalist", requiredHerbs, herbOfferts, i -> new GiveHerbOffert(i)));
+                get_all_behaviour.addSubBehaviour(getFetchOffertBehaviour("elementarist", requiredEssences, essenceOfferts, i -> new GiveEssenceOffert(i)));
+
+                addBehaviour(get_all_behaviour);
+            }
+            
+        };
 
         // on finish, 
 
         // addBehaviour(new MageBehaviour(get_all_behaviour, this));
-        addBehaviour(new WakerBehaviour(this, 1000) {
+        addBehaviour(new WakerBehaviour(this, delay) {
             protected void onWake() {
-                addBehaviour(behaviour);
+                addBehaviour(fetchBehaviour);
             };
         });
     }

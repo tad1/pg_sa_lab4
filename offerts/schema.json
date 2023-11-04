@@ -46,6 +46,9 @@
             },
             "money":{
                 "type":"integer"
+            },
+            "delay":{
+                "type":"integer"
             }
         },
         "allOf": [
@@ -82,7 +85,7 @@
             {
                 "required":["type"],
                 "if": {
-                    "properties": {"type":{"enum": ["Elementarist"]}}
+                    "properties": {"type":{"enum": ["Mage"]}}
                 },
                 "then": {
                     "required": ["money"],

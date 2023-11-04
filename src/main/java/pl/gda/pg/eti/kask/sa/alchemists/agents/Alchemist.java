@@ -2,8 +2,11 @@ package pl.gda.pg.eti.kask.sa.alchemists.agents;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jade.core.behaviours.WakerBehaviour;
 import lombok.Getter;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RegisterServiceBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.WaitingBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.alchemist.AlchemistBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.Potion;
 
@@ -26,8 +29,15 @@ public class Alchemist extends SingleConceptMerchant<Potion> {
         for (Object arg : args) {
             potions.add(new Potion(arg.toString()));
         } 
-        addBehaviour(new RegisterServiceBehaviour(this, "alchemist"));
-        addBehaviour(new AlchemistBehaviour(this));
+
+        addBehaviour(new WakerBehaviour(this, this.delay) {
+            @Override
+            protected void onWake() {
+                super.onWake();
+                addBehaviour(new AlchemistBehaviour(Alchemist.this));
+                addBehaviour(new RegisterServiceBehaviour(Alchemist.this, "alchemist"));
+            }
+        });
     }
 
     @Override

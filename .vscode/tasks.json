@@ -3,6 +3,6 @@
     "tasks": [{
         "label": "extract env",
         "type": "shell",
-        "command": "./offerts/parse.sh ./offerts/case1.json"
+        "command": "./offerts/parse.sh ./offerts/case3.json"
     }]
 }

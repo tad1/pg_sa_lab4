@@ -2,6 +2,7 @@ package pl.gda.pg.eti.kask.sa.alchemists.agents;
 
 import java.util.List;
 
+import jade.core.behaviours.WakerBehaviour;
 import lombok.Getter;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RegisterServiceBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.elementarist.ElementaristBehaviour;
@@ -20,9 +21,15 @@ public class Elementarist extends SingleConceptMerchant<Essence>{
     protected void setup() {
         super.setup();
 
-        addBehaviour(new RegisterServiceBehaviour(this, "elementarist"));
-        addBehaviour(new ElementaristBehaviour(this));
         
+        addBehaviour(new WakerBehaviour(this, this.delay) {
+            @Override
+            protected void onWake() {
+                super.onWake();
+                addBehaviour(new ElementaristBehaviour(Elementarist.this));
+                addBehaviour(new RegisterServiceBehaviour(Elementarist.this, "elementarist"));
+            }
+        });
 
     }
 

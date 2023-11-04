@@ -1,0 +1,31 @@
+[
+    {
+        "type": "Alchemist",
+        "name": "Adam",
+        "potions": ["Potion of mana", "Monday Potion", "Blast Potion of Energy"],
+        "number": [2, 1, 2],
+        "prices": [2,3,4]
+    },
+    {
+        "type": "Herbalist",
+        "name": "Agel",
+        "herbs": ["Grass", "Marshmallow", "Mytical Dandelion"],
+        "number": [2, 1, 2],
+        "prices": [2,3,4]
+    },
+    {
+        "type": "Elementarist",
+        "name": "HighPrices",
+        "essences": ["Air Essence", "Dark Essence", "Earth Essence", "Fire Essence"],
+        "prices": [999,999,999,999],
+        "number": [10, 10, 10, 10]
+    },
+    {
+        "type": "Mage",
+        "name": "Mana",
+        "herbs": ["Grass"],
+        "potions": ["Monday Potion", "Blast Potion of Energy", "Blast Potion of Energy"],
+        "essences": ["Air Essence"],
+        "money": 10
+    }
+]
