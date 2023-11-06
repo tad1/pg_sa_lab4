@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!src/main/resources/jade/lib/jade.jar
 *.war
 *.nar
 *.ear
