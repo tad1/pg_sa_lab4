@@ -14,6 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Essence implements Concept{
+public class Essence extends Item{
     private String name;
 }

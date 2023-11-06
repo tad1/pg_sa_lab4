@@ -35,9 +35,13 @@ do
 done
 
 # --- MAGE
+MAGES=$($JQ '[.[] | select(.type=="Mage")]' $1)
+N_MAGES=$(echo $MAGES | $JQ '. | length')
+MAGE_ARG=""
 
-MAGE=$($JQ 'first(.[] | select(.type=="Mage"))' $1)
-
+for (( i=0; i<$N_MAGES; i++ ))
+do
+MAGE=$(echo $MAGES | $JQ ".[$i]")
 NAME=$(echo $MAGE | $JQ -r '.name')
 POTIONS=$(echo $MAGE | $JQ -r '.potions | join("|")')
 HERBS=$(echo $MAGE | $JQ -r '.herbs | join("|")')
@@ -46,7 +50,9 @@ MONEY=$(echo $MAGE | $JQ -r '.money')
 DELAY=$(echo $MAGE | $JQ ". | if has(\"delay\") then .delay else 0 end")
 
 
-MAGE_ARG="${NAME}:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage($MONEY,$POTIONS,$HERBS,$ESSENCES, $DELAY);"
+MAGE_ARG="${MAGE_ARG}${NAME}:pl.gda.pg.eti.kask.sa.alchemists.agents.Mage($MONEY,$POTIONS,$HERBS,$ESSENCES, $DELAY);"
+
+done
 # --- END MAGE
 
 echo "MERCHANT_ARGS=$MERCHANTS" > .env

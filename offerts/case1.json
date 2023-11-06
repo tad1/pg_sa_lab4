@@ -3,8 +3,8 @@
         "type": "Alchemist",
         "name": "Adam",
         "potions": ["Potion of mana", "Monday Potion", "Blast Potion of Energy"],
-        "number": [2, 1, 2],
-        "prices": [2,3,4]
+        "number": [2, 3, 2],
+        "prices": [2,3,2]
     },
     {
         "type": "Herbalist",
@@ -18,6 +18,14 @@
         "name": "Mana",
         "herbs": ["Grass"],
         "potions": ["Monday Potion", "Blast Potion of Energy", "Blast Potion of Energy"],
+        "essences": [],
+        "money": 12
+    },
+    {
+        "type": "Mage",
+        "name": "Range",
+        "herbs": ["Grass"],
+        "potions": ["Monday Potion"],
         "essences": [],
         "money": 10
     }

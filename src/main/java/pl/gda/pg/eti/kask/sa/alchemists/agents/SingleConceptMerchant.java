@@ -11,6 +11,8 @@ import jade.content.Predicate;
 import jade.content.onto.basic.Result;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.gui.GuiAgent;
 import lombok.Getter;
@@ -81,7 +83,13 @@ public abstract class SingleConceptMerchant<T extends Concept> extends BaseAgent
     }
 
     protected void takeDown() {
-        this.disposeGUI();
+         try{
+            DFService.deregister(this);
+         } catch (FIPAException fe){
+            fe.printStackTrace();
+         }
+
+         this.disposeGUI();
      }
   
      public SingleConceptMerchantGUI<T> getGui() {

@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Potion implements Concept {
+public class Potion extends Item {
     
     private String name;
     

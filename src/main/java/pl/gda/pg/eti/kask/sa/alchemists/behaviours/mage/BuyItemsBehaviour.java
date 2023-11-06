@@ -17,6 +17,7 @@ import pl.gda.pg.eti.kask.sa.alchemists.agents.BaseAgent;
 import pl.gda.pg.eti.kask.sa.alchemists.agents.Mage;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.ReceiveResultBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RequestActionBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.ontology.Item;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.SellEssence;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.SellHerb;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.SellPotion;
@@ -51,7 +52,7 @@ public class BuyItemsBehaviour extends OneShotBehaviour {
         public R apply(T t, U u);
     }
 
-    private <T extends Concept, R extends AgentAction> void buyAllRequired(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts, Function2<T,Integer,R> itemCountToAction, ParallelBehaviour parent){
+    private <T extends Item, R extends AgentAction> void buyAllRequired(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts, Function2<T,Integer,R> itemCountToAction, ParallelBehaviour parent){
         for (T item : required.keySet()) {
             if(offerts.get(item) == null){
                 return;

@@ -1,25 +1,27 @@
 package pl.gda.pg.eti.kask.sa.alchemists.ontology;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import jade.content.AgentAction;
 import jade.content.Concept;
+import jade.core.AID;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author psysiu
- */
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Herb extends Item {
-    
-    private String name;
-    
+
+public class Plan implements Concept {
+    public Plan(){
+        entries = new HashMap<>();
+    }
+
+    private HashMap<AID, PlanEntry> entries;
 }

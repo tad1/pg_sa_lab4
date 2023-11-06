@@ -8,18 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- *
- * @author psysiu
- */
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class Herb extends Item {
-    
-    private String name;
+public class Item implements Concept {
     
 }

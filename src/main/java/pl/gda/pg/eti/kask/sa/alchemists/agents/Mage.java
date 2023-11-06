@@ -22,10 +22,12 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.core.behaviours.WakerBehaviour;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import lombok.Getter;
+import lombok.Setter;
 import pl.gda.pg.eti.kask.sa.alchemists.OffertProposition;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.FindServiceBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.ReceiveResultBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.RequestActionBehaviour;
+import pl.gda.pg.eti.kask.sa.alchemists.behaviours.buyers.RequestCommunityMembership;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.mage.CheckOffertsBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.mage.MageBehaviour;
 import pl.gda.pg.eti.kask.sa.alchemists.behaviours.mage.RequestHerbBehaviour;
@@ -36,7 +38,9 @@ import pl.gda.pg.eti.kask.sa.alchemists.ontology.GiveEssenceOffert;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.GiveHerbOffert;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.GivePotionOffert;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.Herb;
+import pl.gda.pg.eti.kask.sa.alchemists.ontology.Item;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.Offert;
+import pl.gda.pg.eti.kask.sa.alchemists.ontology.Plan;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.Potion;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.SellHerb;
 import pl.gda.pg.eti.kask.sa.alchemists.ontology.SellPotion;
@@ -51,6 +55,10 @@ public class Mage extends BaseAgent {
     }
 
     private transient MageGUI myGui;
+
+    @Getter
+    @Setter
+    private AID leader;
 
     @Getter
     private int money;
@@ -69,6 +77,7 @@ public class Mage extends BaseAgent {
     private HashMap<Essence, ArrayList<OffertProposition>> essenceOfferts;
 
     private long delay;
+    static long offertFetchTime = 500;
 
     @Override
     protected void setup() {
@@ -128,10 +137,136 @@ public class Mage extends BaseAgent {
                 addBehaviour(fetchBehaviour);
             };
         });
+        addBehaviour(new WakerBehaviour(this, delay + offertFetchTime) {
+           protected void onWake() {
+                addBehaviour(new RequestCommunityMembership(Mage.this, 200));
+           }; 
+        });
+    }
+
+    public boolean SignToPlan(Plan plan){
+        assert !plan.getEntries().containsKey(getAID());
+
+        HashMap<Potion, ArrayList<OffertProposition>> potionLeftOfferts = new HashMap<>();
+        HashMap<Herb, ArrayList<OffertProposition>> herbLeftOfferts = new HashMap<>();
+        HashMap<Essence, ArrayList<OffertProposition>> essenceLeftOfferts = new HashMap<>();
+
+        HashMap<Potion, ArrayList<OffertProposition>> usedPotionOfferts = new HashMap<>();
+        HashMap<Herb, ArrayList<OffertProposition>> usedHerbOfferts = new HashMap<>();
+        HashMap<Essence, ArrayList<OffertProposition>> usedEssenceOfferts = new HashMap<>();
+        
+        // step 0, find what offerst are already used
+        for (AID participant : plan.getEntries().keySet()) {
+            for (OffertProposition offert : plan.getEntries().get(participant).offerts) {
+                Class<?> type = offert.getItem().getClass();
+                if(offert.getItem() instanceof Potion){
+                    System.out.println("Ok");
+                }
+            }
+        }
+        
+        // step 1, reduce offerts
+
+
+        for (AID participant : plan.getEntries().keySet()) {
+            
+        }
+
+        boolean has_enough = true;
+        has_enough &= checkItemRequirements(requiredEssences, essenceLeftOfferts);
+        has_enough &= checkItemRequirements(requiredHerbs, herbLeftOfferts);
+        has_enough &= checkItemRequirements(requiredPotions, potionLeftOfferts);
+
+        if(!has_enough){
+            return false;
+        }
+
+
+        int money_needed = 0;
+        money_needed += getItemCost(requiredEssences, essenceLeftOfferts);
+        money_needed += getItemCost(requiredHerbs, herbLeftOfferts);
+        money_needed += getItemCost(requiredPotions, potionLeftOfferts);
+
+        if(money_needed > money){
+            return false;
+        }
+
+        // sign to plan
+        ArrayList<OffertProposition> myTransactions = new ArrayList<>();
+        addItemsToTransactionList(requiredEssences, essenceLeftOfferts, myTransactions);
+        addItemsToTransactionList(requiredPotions, potionLeftOfferts, myTransactions);
+        addItemsToTransactionList(requiredHerbs, herbLeftOfferts, myTransactions);
+
+        // left here, add reducing
+        return true;
+    }
+
+    private <T extends Item> void addItemsToTransactionList(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts, ArrayList<OffertProposition> transactionList){
+        for (T item : required.keySet()) {
+            if(offerts.get(item) == null){
+                return;
+            }
+
+            for (OffertProposition offert : offerts.get(item)) {
+                int count = Math.min(required.get(item), offert.getOffert().getQuantity());
+                Offert transaction = new Offert(offert.getOffert().getPrice(), count);
+
+                transactionList.add(new OffertProposition(offert.getItem(), transaction, offert.getSeller()));
+            }
+        }
+    }
+
+    private <T extends Concept, R extends AgentAction> void buyAllRequired(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts, Function2<T,Integer,R> itemCountToAction, ParallelBehaviour parent){
+        
+    }
+
+    private <T extends Item> boolean checkItemRequirements(HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts){
+        for (T item : required.keySet()) {
+            if(!checkItemRequirements(item, required, offerts)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private <T extends Item> boolean checkItemRequirements(T item, HashMap<T, Integer> required, HashMap<T, ArrayList<OffertProposition>> offerts){
+        if(offerts.get(item) == null)
+            return false;
+
+        int total = offerts.get(item).stream().map(x -> x.getOffert().getQuantity()).reduce(0, Integer::sum);
+        return total >= required.get(item);
+    }
+
+    private <T extends Item> int getItemCost(HashMap<T, Integer> requiredMap, HashMap<T, ArrayList<OffertProposition>> offertMap){
+        int cost = 0;
+        for (T item : requiredMap.keySet()) {
+            cost += getItemCost(item, requiredMap, offertMap);
+        }
+        return cost;
+    }
+    
+
+    private <T extends Item> int getItemCost(T item, HashMap<T, Integer> requiredMap, HashMap<T, ArrayList<OffertProposition>> offertMap){
+        int cost = 0;
+        int required = requiredMap.get(item);
+
+        ArrayList<OffertProposition> offerts = offertMap.get(item);
+        
+        for (OffertProposition offert : offerts) {
+            int count = Math.min(offert.getOffert().getQuantity(), required);
+            cost += count * offert.getOffert().getPrice();
+
+            required -= count;
+            if(required <= 0){
+                break;
+            }
+        }
+
+        return cost;
     }
 
 
-    public <T extends Concept> void payForItems(T item, OffertProposition offert, int count, HashMap<T, Integer> required){
+    public <T extends Item> void payForItems(T item, OffertProposition offert, int count, HashMap<T, Integer> required){
         assert count <= offert.getOffert().getQuantity();
         if(required.get(item) == null){
             return;
@@ -157,7 +292,7 @@ public class Mage extends BaseAgent {
         System.out.println("Payed "+price+" for "+count+ "x"+item);
     }
 
-    private <T extends Concept, R extends AgentAction> Behaviour getFetchOffertBehaviour(String service_name, HashMap<T,Integer> required, HashMap<T,ArrayList<OffertProposition>> offerts, Function<T,R> itemToAction){
+    private <T extends Item, R extends AgentAction> Behaviour getFetchOffertBehaviour(String service_name, HashMap<T,Integer> required, HashMap<T,ArrayList<OffertProposition>> offerts, Function<T,R> itemToAction){
         
         
         return new FindServiceBehaviour(this, service_name) {
@@ -169,7 +304,6 @@ public class Mage extends BaseAgent {
                     for (DFAgentDescription service : services) {
                         AID name = service.getName();
                         for (T item : required.keySet()) {
-                            System.out.print("requesting "+item);
                             R action = itemToAction.apply(item);
                             RequestActionBehaviour<R, Mage> request = new RequestActionBehaviour<R,Mage>(Mage.this, name, action) {
   
@@ -183,7 +317,7 @@ public class Mage extends BaseAgent {
                                             if (predicate instanceof Result) {
                                                 Offert offert = (Offert)((Result) predicate).getValue();
                                                 myAgent.addOffert(offerts, item, offert, name);
-                                                myAgent.addBehaviour(new CheckOffertsBehaviour(myAgent));
+                                                // myAgent.addBehaviour(new CheckOffertsBehaviour(myAgent));
   
                                             } else {
                                                 System.out.println("No result");
@@ -212,8 +346,8 @@ public class Mage extends BaseAgent {
         }
     }
 
-    private <T extends Concept>void addOffert(HashMap<T, ArrayList<OffertProposition>> map, T item, Offert offert, AID seller){
-        OffertProposition proposition = new OffertProposition(offert, seller);
+    private <T extends Item>void addOffert(HashMap<T, ArrayList<OffertProposition>> map, T item, Offert offert, AID seller){
+        OffertProposition proposition = new OffertProposition(item, offert, seller);
 
         ArrayList<OffertProposition> list = map.getOrDefault(item, new ArrayList<>());
         list.add(proposition);
